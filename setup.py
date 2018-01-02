@@ -49,7 +49,8 @@ setuptools.setup(
     package_dir={'': 'src'},
     packages=setuptools.find_packages('src'),
     install_requires=[
-        'Flask'
+        'aiohttp',
+        'click',
     ],
     extra_requires={
         'dev': [
