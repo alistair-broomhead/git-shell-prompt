@@ -4,7 +4,7 @@ import errno
 import click
 
 from git_shell_prompt.server import app
-from git_shell_prompt.main import synchronisation
+from git_shell_prompt import synchronisation
 
 
 @contextlib.contextmanager

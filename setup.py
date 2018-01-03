@@ -59,7 +59,8 @@ setuptools.setup(
     },
     entry_points={
         'console_scripts': [
-            'git-shell-prompt-daemon=git_shell_prompt.server.daemon:main'
+            'git-shell-prompt-daemon=git_shell_prompt.server.daemon:main',
+            'git-shell-prompt-client=git_shell_prompt.client:main',
         ],
     },
 )

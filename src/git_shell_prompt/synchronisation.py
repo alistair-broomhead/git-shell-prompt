@@ -117,7 +117,7 @@ def _write_accessor(reader_name, key):
     def setter(self, value):
         data = read(self)
 
-        if data.get(key) != value:
+        if get(key) != value:
             data[key] = value
             write(self, data)
 
