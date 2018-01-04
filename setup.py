@@ -51,6 +51,7 @@ setuptools.setup(
     install_requires=[
         'aiohttp',
         'click',
+        'gunicorn',
     ],
     extra_requires={
         'dev': [
