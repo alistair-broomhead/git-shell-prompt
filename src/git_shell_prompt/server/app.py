@@ -1,13 +1,18 @@
 from aiohttp import web
 from gunicorn.app import wsgiapp
 
-from git_shell_prompt.server import git
+from git_shell_prompt.server import (
+    formatters,
+    git,
+)
 
 
 async def handler(request):
-    return web.json_response(
-        await git.get_info(path=request.path)
-    )
+    fmt = request.query.get('fmt')
+
+    info = await git.get_info(path=request.path)
+
+    return formatters.Registry.get(fmt).format(**info)
 
 
 app = web.Application()
