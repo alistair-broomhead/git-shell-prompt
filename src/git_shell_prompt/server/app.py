@@ -42,3 +42,17 @@ class StandaloneApplication(wsgiapp.WSGIApplication):
             workers=workers,
             worker_class='aiohttp.worker.GunicornWebWorker',
         )
+
+
+class DebugApplication:
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
+    # noinspection PyUnusedLocal
+    @classmethod
+    def create(cls, host, port, workers):
+        return cls(host, port)
+
+    def run(self):
+        web.run_app(app, host=self.host, port=self.port)
