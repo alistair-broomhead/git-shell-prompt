@@ -63,7 +63,7 @@ def repo_info(repo):
 
             'local': local_info(repo),
 
-            'upstream': {
+            'remote': {
                 # 'needs_merge': None,
                 # 'can_fast_forward': None,
                 # 'has_diverged': None,
