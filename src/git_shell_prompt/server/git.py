@@ -7,9 +7,45 @@ import dulwich.porcelain
 import dulwich.repo
 
 
-def non_repo_info():
+def non_repo_info() -> dict:
     return {
         'is_git': False,
+    }
+
+
+def local_info(repo) -> dict:
+    root = pathlib.Path(repo.path).resolve()
+
+    staged, unstaged, untracked = dulwich.porcelain.status(repo)
+
+    modifications = deletions = False
+
+    for path in unstaged:
+        if isinstance(path, bytes):
+            path = path.decode('utf-8')
+
+        # An addition must be staged to be tracked
+        if (root / path).exists():
+            modifications = True
+        else:
+            deletions = True
+
+    ready = any(staged.values()) and not (unstaged or untracked)
+
+    try:
+        refs, stash = repo.refs.follow(b'refs/stash')
+    except KeyError:
+        stash = None
+
+    return {
+        'has_stashes': stash is not None,
+        'has_untracked': bool(untracked),
+        'has_modifications': modifications,
+        'has_deletions': deletions,
+        'has_additions': bool(staged['add']),
+        'has_cached_modifications': bool(staged['modify']),
+        'has_cached_deletions': bool(staged['delete']),
+        'ready_to_commit': ready,
     }
 
 
@@ -17,9 +53,7 @@ def repo_info(repo):
     root = pathlib.Path(repo.path)
 
     with contextlib.closing(repo):
-        staged, unstaged, untracked = dulwich.porcelain.status(repo)
-
-        return {
+        full = {
             'is_git': True,
 
             'repo': {
@@ -27,16 +61,7 @@ def repo_info(repo):
                 'name': root.name,
             },
 
-            'local': {
-                'has_untracked': bool(untracked),
-                'has_additions': bool(staged['add']),
-                'has_deletions': bool(staged['delete']),
-                'has_modifications': bool(staged['modify']),
-                'has_cached_modifications': bool(staged['modify']),
-                'ready_to_commit': staged and not (unstaged or untracked),
-                # 'is_on_tag': None,
-                # 'detached': None,
-            },
+            'local': local_info(repo),
 
             'upstream': {
                 # 'needs_merge': None,
@@ -49,6 +74,7 @@ def repo_info(repo):
                 # 'has_stashes': None,
             },
         }
+        return full
 
 
 async def get_info(path):
@@ -59,6 +85,8 @@ async def get_info(path):
     try:
         repo = dulwich.repo.Repo.discover(path)
     except dulwich.errors.NotGitRepository:
-        return collections.ChainMap(non_repo_info(), common)
+        maps = [non_repo_info()]
     else:
-        return collections.ChainMap(repo_info(repo), common)
+        maps = [repo_info(repo)]
+
+    return collections.ChainMap(*maps, common)
