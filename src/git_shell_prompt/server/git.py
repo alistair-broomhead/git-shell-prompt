@@ -77,6 +77,27 @@ def repo_info(repo):
         return full
 
 
+def rel_path(root, path):
+    pth_root = pathlib.Path(root)
+    pth_path = pathlib.Path(path)
+
+    relative = str(
+        pth_path.relative_to(pth_root)
+    )
+
+    if not relative.startswith('..'):
+        return relative
+
+    relative = str(
+        pth_path.resolve().relative_to(pth_root.resolve())
+    )
+
+    if not relative.startswith('..'):
+        return relative
+
+    return path
+
+
 async def get_info(path):
     common = {
         'path': str(pathlib.Path(path).resolve()),
@@ -87,6 +108,9 @@ async def get_info(path):
     except dulwich.errors.NotGitRepository:
         maps = [non_repo_info()]
     else:
-        maps = [repo_info(repo)]
+        maps = [
+            repo_info(repo),
+            {'rel': rel_path(repo.path, path)},
+        ]
 
     return collections.ChainMap(*maps, common)
