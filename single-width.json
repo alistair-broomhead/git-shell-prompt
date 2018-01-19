@@ -1,0 +1,20 @@
+{
+    "is_a_git_repo": null,
+    "has_stashes": "[stash]",
+    "has_untracked": "U",
+    "has_modifications": "m",
+    "has_deletions": "d",
+    "has_additions": "A",
+    "has_cached_modifications": "M",
+    "has_cached_deletions": "D",
+    "ready_to_commit": "[ready]",
+    "detached": "!!",
+    "not_tracked_branch": "[untracked]",
+    "has_diverged": "[diverged]",
+    "can_fast_forward": "[FF]",
+    "should_push": "[P]",
+    "rebase": "[R]",
+    "merge": "[M]",
+    "is_on_a_tag": "[T]",
+    "transition": ""
+}

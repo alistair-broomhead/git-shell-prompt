@@ -1,0 +1,20 @@
+{
+    "is_a_git_repo": "",
+    "has_stashes": "",
+    "has_untracked": "?",
+    "has_modifications": "",
+    "has_deletions": "",
+    "has_additions": "",
+    "has_cached_modifications": "",
+    "has_cached_deletions": "",
+    "ready_to_commit": "",
+    "detached": "",
+    "not_tracked_branch": "",
+    "has_diverged": "",
+    "can_fast_forward": "",
+    "should_push": "",
+    "rebase": "",
+    "merge": "",
+    "is_on_a_tag": "",
+    "transition": ""
+}
